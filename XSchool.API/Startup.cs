@@ -23,24 +23,27 @@ namespace XSchool.API
             services.AddControllers();
 
             services.AddAppDbContextService(Configuration);
+            services.AddAppJWTAuthenticaionService(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.IsDevelopment()) _ = app.UseDeveloperExceptionPage();
+
+            _ = app.UseSwagger(c => c.SerializeAsV2 = true);
+
+            _ = app.UseSwaggerUI(c =>
             {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "X-School APIs v1.0");
+                c.RoutePrefix = string.Empty;
             });
+
+            _ = app.UseRouting();
+
+            _ = app.UseAuthorization();
+
+            _ = app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }
