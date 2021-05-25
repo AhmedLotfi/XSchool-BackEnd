@@ -2,6 +2,6 @@
 {
     public interface ICreatedUser
     {
-        long? UserId { get; set; }
+        long? CreatedBy { get; set; }
     }
 }

@@ -6,7 +6,7 @@ namespace XSchool.Domain.App.Audit
     public class AuditedEntity<TPrimaryKey> : AuditedCreationEntity, IPrimaryKey<TPrimaryKey>, IModifiedUser, IModifactionDate
     {
         public TPrimaryKey Id { get; set; }
-        public long? ModifiedUserId { get; set; }
+        public long? ModifiedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }
     }
 }

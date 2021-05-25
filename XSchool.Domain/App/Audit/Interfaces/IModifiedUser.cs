@@ -2,6 +2,6 @@
 {
     public interface IModifiedUser
     {
-        long? ModifiedUserId { get; set; }
+        long? ModifiedBy { get; set; }
     }
 }
