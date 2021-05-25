@@ -2,8 +2,11 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using NetCore.AutoRegisterDi;
+using System.Reflection;
 using XSchool.API.Extensions;
+using XSchool.Domain.Core.Middlewares;
+using XSchool.Services.App.Users;
 
 namespace XSchool.API
 {
@@ -24,26 +27,37 @@ namespace XSchool.API
 
             services.AddAppDbContextService(Configuration);
             services.AddAppJWTAuthenticaionService(Configuration);
+            services.AddSwaggerDocumentation();
+
+            services.RegisterAssemblyPublicNonGenericClasses(Assembly.GetAssembly(typeof(UsersAppService)))
+            .Where(c => c.Name.EndsWith("AppService"))
+            .AsPublicImplementedInterfaces();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment()) _ = app.UseDeveloperExceptionPage();
+            _ = app.UseMiddleware<ExceptionMiddleware>();
 
-            _ = app.UseSwagger(c => c.SerializeAsV2 = true);
+            _ = app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
-            _ = app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "X-School APIs v1.0");
-                c.RoutePrefix = string.Empty;
-            });
+            _ = app.UseHttpsRedirection();
 
-            _ = app.UseRouting();
+            _ = app.UseStaticFiles();
+
+            _ = app.UseCors("CorsPolicy");
+
+            _ = app.UseAuthentication();
 
             _ = app.UseAuthorization();
 
-            _ = app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            _ = app.UseSwaggerDocumention();
+
+            _ = app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapFallbackToController("Index", "Fallback");
+            });
         }
     }
 }
