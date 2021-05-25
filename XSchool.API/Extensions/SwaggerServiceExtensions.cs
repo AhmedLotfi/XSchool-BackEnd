@@ -6,7 +6,7 @@ namespace XSchool.API.Extensions
 {
     public static class SwaggerServiceExtensions
     {
-        public static IServiceCollection AddSwaggerDocumentation(this IServiceCollection services)
+        public static void AddSwaggerDocumentation(this IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
             {
@@ -29,8 +29,6 @@ namespace XSchool.API.Extensions
                 c.AddSecurityDefinition("Bearer", securitySchema);
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement { { securitySchema, new[] { "Bearer" } } });
             });
-
-            return services;
         }
 
         public static IApplicationBuilder UseSwaggerDocumention(this IApplicationBuilder app)
@@ -39,7 +37,6 @@ namespace XSchool.API.Extensions
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "X-School API v1");
-                c.RoutePrefix = string.Empty;
             });
 
             return app;

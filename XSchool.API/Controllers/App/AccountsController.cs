@@ -4,5 +4,6 @@ namespace XSchool.API.Controllers
 {
     public class AccountsController : AnonymouseBaseControllercs
     {
+
     }
 }

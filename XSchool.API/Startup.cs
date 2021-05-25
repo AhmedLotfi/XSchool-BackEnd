@@ -7,6 +7,7 @@ using System.Reflection;
 using XSchool.API.Extensions;
 using XSchool.Domain.Core.Middlewares;
 using XSchool.Services.App.Users;
+using XSchool.Services.MappingProfiles;
 
 namespace XSchool.API
 {
@@ -22,16 +23,25 @@ namespace XSchool.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.ConfigureAPIBehavior();
 
             services.AddControllers();
-
+            services.AddSwaggerDocumentation();
             services.AddAppDbContextService(Configuration);
             services.AddAppJWTAuthenticaionService(Configuration);
-            services.AddSwaggerDocumentation();
+            services.AddAutoMapper(typeof(AppMappingProfile));
 
             services.RegisterAssemblyPublicNonGenericClasses(Assembly.GetAssembly(typeof(UsersAppService)))
             .Where(c => c.Name.EndsWith("AppService"))
             .AsPublicImplementedInterfaces();
+
+            services.AddCors(obt =>
+            {
+                obt.AddPolicy("CorsPolicy", policy =>
+                {
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200");
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,6 +54,8 @@ namespace XSchool.API
             _ = app.UseHttpsRedirection();
 
             _ = app.UseStaticFiles();
+
+            _ = app.UseRouting();
 
             _ = app.UseCors("CorsPolicy");
 
