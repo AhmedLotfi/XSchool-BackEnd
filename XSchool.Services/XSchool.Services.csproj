@@ -5,11 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="App\Accounts\" />
+    <PackageReference Include="AspNetCore.Authentication.Plugin" Version="1.0.1" />
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <ProjectReference Include="..\XSchool.Domain\XSchool.Domain.csproj" />
+    <ProjectReference Include="..\XSchool.EntityFrameworkCore\XSchool.EntityFrameworkCore.csproj" />
   </ItemGroup>
 
 </Project>

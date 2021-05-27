@@ -2,10 +2,11 @@
 {
     public class ApiResponse
     {
-        public ApiResponse(int statusCode, string message = null)
+        public ApiResponse(int statusCode, string message = null, object data = null)
         {
             StatusCode = statusCode;
             Message = message ?? GetDefaultMessageForStatusCode(statusCode);
+            Data = data;
         }
 
         public bool Success { get; set; } = true;
@@ -13,6 +14,8 @@
         public int StatusCode { get; set; }
 
         public string Message { get; set; }
+
+        public object Data { get; set; }
 
         private string GetDefaultMessageForStatusCode(int statusCode)
         {
