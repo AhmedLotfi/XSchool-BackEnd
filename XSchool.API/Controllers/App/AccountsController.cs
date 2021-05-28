@@ -3,9 +3,11 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Net;
 using System.Threading.Tasks;
 using XSchool.API.BaseControllers;
 using XSchool.Domain.App.Users;
+using XSchool.Domain.Core.ErrorModels;
 using XSchool.EntityFrameworkCore.DbContexts;
 using XSchool.Services.App.Accounts;
 using XSchool.Services.App.Accounts.DTOs;
@@ -27,36 +29,33 @@ namespace XSchool.API.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Login([FromBody] UserLoginDto userLoginDto)
+        public async Task<ApiResponse> Login([FromBody] UserLoginDto userLoginDto)
         {
-            var loginResult = await _accountAppService.Login(userLoginDto);
-
-            if (loginResult.Success) return Ok(loginResult);
-
-            return BadRequest(loginResult);
+            return await _accountAppService.Login(userLoginDto);
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Register([FromBody] RegisterNewUserDto userDto)
+        public async Task<ApiResponse> Register([FromBody] RegisterNewUserDto userDto)
         {
-            try
-            {
-                if (await IsAnotherUserHasMyEmail(userDto.Email)) return BadRequest($"{userDto.Email} is already used!");
+            if (await IsAnotherUserHasMyEmail(userDto.Email))
+                return new ApiResponse((int)HttpStatusCode.InternalServerError, $"{userDto.Email} is already used!");
 
-                userDto.Password = SecurePasswordHasherHelper.Hash(userDto.Password);
+            userDto.Password = SecurePasswordHasherHelper.Hash(userDto.Password);
 
-                var userMapped = _mapper.Map<User>(userDto);
+            bool isValidRole = Enum.IsDefined(typeof(RoleType), userDto.Role);
 
-                await _xSchoolDbContext.Users.AddAsync(userMapped);
+            if (!isValidRole)
+                return new ApiResponse((int)HttpStatusCode.InternalServerError, "Role not valid");
 
-                await _xSchoolDbContext.SaveChangesAsync();
+            var userMapped = _mapper.Map<User>(userDto);
 
-                return Created(HttpContext.Request.Path, userDto);
-            }
-            catch (Exception x)
-            {
-                return BadRequest(x.InnerException?.Message ?? x.Message);
-            }
+            await _xSchoolDbContext.Users.AddAsync(userMapped);
+
+            await _xSchoolDbContext.SaveChangesAsync();
+
+            userDto.Password = string.Empty;
+
+            return new ApiResponse((int)HttpStatusCode.Created, "Registered Successfully", userDto);
         }
 
         private async Task<bool> IsAnotherUserHasMyEmail(string email)

@@ -29,7 +29,8 @@ namespace XSchool.Services.App.Accounts.DTOs
         public DateTime DateOfBirth { get; set; }
 
         [Required]
-        [MaxLength(150)]
         public RoleType Role { get; set; }
+
+        public string RoleName => Enum.GetName(typeof(RoleType), this.Role);
     }
 }

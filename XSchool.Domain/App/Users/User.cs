@@ -32,7 +32,6 @@ namespace XSchool.Domain.App.Users
         public DateTime DateOfBirth { get; protected set; }
 
         [Required]
-        [MaxLength(150)]
         public RoleType Role { get; protected set; }
         #endregion
 
