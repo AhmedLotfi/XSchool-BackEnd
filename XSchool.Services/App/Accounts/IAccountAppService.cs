@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using XSchool.Domain.Core.ErrorModels;
-using XSchool.Services.App.Users.DTOs;
+using XSchool.Services.App.Accounts.DTOs;
 
 namespace XSchool.Services.App.Accounts
 {

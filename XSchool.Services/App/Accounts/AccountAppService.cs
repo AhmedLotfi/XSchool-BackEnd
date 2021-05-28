@@ -13,7 +13,7 @@ using XSchool.Services.App.Accounts.DTOs;
 
 namespace XSchool.Services.App.Accounts
 {
-    public class AccountAppService
+    public class AccountAppService : IAccountAppService
     {
         private readonly AuthService _auth;
         private readonly XSchoolDbContext _xSchoolDbContext;
