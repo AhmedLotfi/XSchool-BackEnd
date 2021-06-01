@@ -1,11 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using XSchool.Domain.App.Audit;
+using XSchool.Domain.App.Audit.Interfaces;
 using static XSchool.Domain.Helpers.Enums.RoleTypes;
 
 namespace XSchool.Domain.App.Users
 {
-    public class User : AuditedEntity<long>
+    public class User : AuditedEntity<long>, IPassive
     {
         #region Props
 
@@ -33,6 +34,10 @@ namespace XSchool.Domain.App.Users
 
         [Required]
         public RoleType Role { get; protected set; }
+
+        public bool IsActive { get; set; }
+
+        public bool IsAccepted { get; set; }
         #endregion
 
         protected User() { }

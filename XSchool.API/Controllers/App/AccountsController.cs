@@ -37,6 +37,7 @@ namespace XSchool.API.Controllers
         [HttpPost("[action]")]
         public async Task<ApiResponse> Register([FromBody] RegisterNewUserDto userDto)
         {
+            #region Valid user data
             if (await IsAnotherUserHasMyEmail(userDto.Email))
                 return new ApiResponse((int)HttpStatusCode.InternalServerError, $"{userDto.Email} is already used!");
 
@@ -44,24 +45,27 @@ namespace XSchool.API.Controllers
 
             bool isValidRole = Enum.IsDefined(typeof(RoleType), userDto.Role);
 
-            if (!isValidRole)
-                return new ApiResponse((int)HttpStatusCode.InternalServerError, "Role not valid");
+            if (!isValidRole) return new ApiResponse((int)HttpStatusCode.InternalServerError, "Role not valid");
+            #endregion
 
+            #region Save user
             var userMapped = _mapper.Map<User>(userDto);
+
+            userMapped.CreationDate = DateTime.Now;
+            userMapped.IsAccepted = false;
+            userMapped.IsActive = true;
 
             await _xSchoolDbContext.Users.AddAsync(userMapped);
 
             await _xSchoolDbContext.SaveChangesAsync();
+            #endregion
 
             userDto.Password = string.Empty;
 
             return new ApiResponse((int)HttpStatusCode.Created, "Registered Successfully", userDto);
         }
 
-        private async Task<bool> IsAnotherUserHasMyEmail(string email)
-        {
-            return await _xSchoolDbContext.Users.AnyAsync(user => user.Email.Equals(email));
-        }
+        private async Task<bool> IsAnotherUserHasMyEmail(string email) => await _xSchoolDbContext.Users.AnyAsync(user => user.Email.Equals(email));
 
         private string GetDefaultUserRole() => RoleType.Student.ToString();
     }

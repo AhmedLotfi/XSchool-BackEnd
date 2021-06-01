@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using XSchool.EntityFrameworkCore.DbContexts;
 
 namespace XSchool.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(XSchoolDbContext))]
-    partial class XSchoolDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210601101809_add-users-passive-acceptence-flags")]
+    partial class adduserspassiveacceptenceflags
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
