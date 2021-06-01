@@ -18,7 +18,7 @@ namespace XSchool.API.Controllers.App
 
         // GET: api/<UsersController>
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,HR")]
         public async Task<ApiResponse> Get()
         {
             return await _usersAppService.GetAll();

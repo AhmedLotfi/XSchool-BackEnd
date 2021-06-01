@@ -52,7 +52,8 @@ namespace XSchool.Services.App.Accounts
                     token_type = token.TokenType,
                     creation_Time = token.ValidFrom,
                     expiration_Time = token.ValidTo,
-                    user_id = userExists.Id
+                    user_id = userExists.Id,
+                    user_role = userExists.Role
                 };
 
                 return new ApiResponse((int)HttpStatusCode.OK, string.Empty, result);

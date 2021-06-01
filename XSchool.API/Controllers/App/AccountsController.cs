@@ -52,7 +52,7 @@ namespace XSchool.API.Controllers
             var userMapped = _mapper.Map<User>(userDto);
 
             userMapped.CreationDate = DateTime.Now;
-            userMapped.IsAccepted = false;
+            userMapped.IsAccepted = (userMapped.Role.Equals(RoleType.Admin) || userMapped.Role == RoleType.HR || userMapped.Role == RoleType.Staff);
             userMapped.IsActive = true;
 
             await _xSchoolDbContext.Users.AddAsync(userMapped);
