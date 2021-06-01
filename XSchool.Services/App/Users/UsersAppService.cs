@@ -26,9 +26,9 @@ namespace XSchool.Services.App.Users
 
         public async Task<ApiResponse> GetAll()
         {
-            var data = await _xSchoolDbContext.Users.ToListAsync();
+            List<User> data = await _xSchoolDbContext.Users.ToListAsync();
 
-            var dataMapped = _mapper.Map<IReadOnlyList<User>>(data);
+            IReadOnlyList<GetAllUsersDto> dataMapped = _mapper.Map<IReadOnlyList<GetAllUsersDto>>(data);
 
             return new ApiResponse((int)HttpStatusCode.OK, "Data Retreived Successfully", dataMapped);
         }
