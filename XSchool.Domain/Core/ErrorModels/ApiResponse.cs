@@ -7,6 +7,15 @@
             StatusCode = statusCode;
             Message = message ?? GetDefaultMessageForStatusCode(statusCode);
             Data = data;
+
+            this.Success = statusCode switch
+            {
+                400 => false,
+                401 => false,
+                404 => false,
+                500 => false,
+                _ => true
+            };
         }
 
         public bool Success { get; set; } = true;
