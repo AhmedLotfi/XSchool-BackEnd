@@ -79,5 +79,18 @@ namespace XSchool.Services.App.Users
                 return new ApiResponse((int)HttpStatusCode.BadRequest, x.InnerException?.Message ?? x.Message);
             }
         }
+
+        public async Task<ApiResponse> AcceptUser(long userId)
+        {
+            var currentUser = await _xSchoolDbContext.Users.Where(user => user.Id == userId).FirstOrDefaultAsync();
+
+            currentUser.IsAccepted = true;
+
+            _ = _xSchoolDbContext.Update<User>(currentUser);
+
+            _ = await _xSchoolDbContext.SaveChangesAsync();
+
+            return new ApiResponse((int)HttpStatusCode.OK, "User is accepted");
+        }
     }
 }
